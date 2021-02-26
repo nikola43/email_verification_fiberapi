@@ -30,10 +30,7 @@ func main() {
 		GetEnvVariable("MYSQL_PASSWORD"),
 		GetEnvVariable("MYSQL_DATABASE"))
 
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: "https://rfpjforex.com",
-		AllowHeaders:  "Origin, Content-Type, Accept",
-	}))
+	app.Use(cors.New())
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
