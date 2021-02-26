@@ -7,6 +7,7 @@ import (
 	"github.com/sethvargo/go-password/password"
 	"log"
 	"os"
+	"regexp"
 	"strings"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -72,7 +73,13 @@ func main() {
 		// comprobamos la longitud del email
 		if len(email) == 0 {
 			return c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
-				"success": false,
+				"error": "empty email",
+			})
+		}
+		emailRegexp := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+		if !emailRegexp.MatchString(email) {
+			return c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+				"error": "invalid email",
 			})
 		}
 
@@ -107,7 +114,7 @@ func main() {
 		})
 	})
 
-	app.Listen(":8080")
+	app.Listen(":8081")
 }
 
 func InitializeDbCorrection(user, password, database_name string) {
