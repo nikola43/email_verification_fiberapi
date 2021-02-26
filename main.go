@@ -13,6 +13,7 @@ import (
 	"gorm.io/gorm"
 	"github.com/joho/godotenv"
 	u "github.com/nikola43/rfpjforex_email_verification_api/utils"
+	"time"
 )
 
 type VerificationData struct {
@@ -52,13 +53,14 @@ func main() {
 		DBGorm.Where("code = ?", code).First(&verificationData)
 
 		if len(verificationData.Code) > 0 {
-			verificationData.Code = code
-			DBGorm.Where("code = ?", code).Unscoped().Delete(&verificationData)
-
-			// veirificación OK !!
-			return c.Status(fiber.StatusOK).JSON(&fiber.Map{
-				"success": true,
-			})
+			today := time.Now()
+			expDate := verificationData.CreatedAt.Add(15 * time.Minute)
+			if today.Before(expDate) {
+				// veirificación OK !!
+				return c.Status(fiber.StatusOK).JSON(&fiber.Map{
+					"success": true,
+				})
+			}
 		}
 
 		return c.Status(fiber.StatusNotFound).JSON(&fiber.Map{
@@ -108,17 +110,6 @@ func main() {
 
 		emailManager := u.Info{Code: code}
 		emailManager.SendMailRecovery(verificationData.Email)
-
-		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
-			"success": true,
-		})
-	})
-
-	app.Get("/send/:email", func(c *fiber.Ctx) error {
-		email := c.Params("email")
-		verificationData := &VerificationData{}
-		verificationData.Email = email
-		DBGorm.Where("email = ?", email).Unscoped().Delete(&verificationData)
 
 		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
 			"success": true,
