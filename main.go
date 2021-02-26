@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/sethvargo/go-password/password"
 	"log"
 	"os"
@@ -28,6 +29,11 @@ func main() {
 		GetEnvVariable("MYSQL_USER"),
 		GetEnvVariable("MYSQL_PASSWORD"),
 		GetEnvVariable("MYSQL_DATABASE"))
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "https://rfpjforex.com",
+		AllowHeaders:  "Origin, Content-Type, Accept",
+	}))
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
