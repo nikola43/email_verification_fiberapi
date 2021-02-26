@@ -3,9 +3,11 @@ package utils
 import (
 	"bytes"
 	"fmt"
+	"github.com/joho/godotenv"
 	"html/template"
 	"log"
 	gomail "gopkg.in/gomail.v2"
+	"os"
 )
 
 type Info struct {
@@ -28,15 +30,29 @@ func (i Info) SendMailRecovery(umail string) {
 
 	result := tpl.String()
 	m := gomail.NewMessage()
-	m.SetHeader("From", "verificacionmail@rfpjforex.com")
+	m.SetHeader("From", GetEnvVariable("EMAIL"))
 	m.SetHeader("To", umail)
 	m.SetHeader("Subject", "Verificación de formulario")
 	m.SetBody("text/html", result)
 
-	d := gomail.NewDialer("send.one.com", 465, "verificacionmail@rfpjforex.com", "y%wHW#bCMhdN3dq^")
+	d := gomail.NewDialer("send.one.com", 465, GetEnvVariable("EMAIL"), GetEnvVariable("EMAIL_PASSWORD"))
 
 	// Send the email to Bob, Cora and Dan.
 	if err := d.DialAndSend(m); err != nil {
 		fmt.Println(err)
 	}
+}
+
+// use godot package to load/read the .env file and
+// return the value of the key
+func GetEnvVariable(key string) string {
+
+	// load .env file
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	return os.Getenv(key)
 }
