@@ -114,6 +114,17 @@ func main() {
 		})
 	})
 
+	app.Get("/send/:email", func(c *fiber.Ctx) error {
+		email := c.Params("email")
+		verificationData := &VerificationData{}
+		verificationData.Email = email
+		DBGorm.Where("email = ?", email).Unscoped().Delete(&verificationData)
+
+		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
+			"success": true,
+		})
+	})
+
 	app.Listen(":8081")
 }
 
