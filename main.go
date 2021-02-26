@@ -29,6 +29,12 @@ func main() {
 		GetEnvVariable("MYSQL_PASSWORD"),
 		GetEnvVariable("MYSQL_DATABASE"))
 
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
+			"message": "hi",
+		})
+	})
+
 	app.Get("/verify/:code", func(c *fiber.Ctx) error {
 		code := c.Params("code")
 		verificationData := &VerificationData{}
