@@ -68,7 +68,8 @@ func main() {
 		})
 	})
 
-	app.Get("/auth/:email", func(c *fiber.Ctx) error {
+
+	app.Get("/auth/en/:email", func(c *fiber.Ctx) error {
 		email := c.Params("email")
 		verificationData := &VerificationData{}
 
@@ -109,7 +110,55 @@ func main() {
 		}
 
 		emailManager := u.Info{Code: code}
-		emailManager.SendMailRecovery(verificationData.Email)
+		emailManager.SendMailRecoveryEn(verificationData.Email)
+
+		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
+			"success": true,
+		})
+	})
+
+	app.Get("/auth/es/:email", func(c *fiber.Ctx) error {
+		email := c.Params("email")
+		verificationData := &VerificationData{}
+
+		// comprobamos la longitud del email
+		if len(email) == 0 {
+			return c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+				"error": "empty email",
+			})
+		}
+		emailRegexp := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+		if !emailRegexp.MatchString(email) {
+			return c.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
+				"error": "invalid email",
+			})
+		}
+
+		code, err := password.Generate(6, 0, 0, true, false)
+		if err != nil {
+			return err
+		}
+		code = strings.ToUpper(code)
+
+		// buscamos si existe algun registro con el email recibido
+		DBGorm.Where("email = ?", email).First(&verificationData)
+
+		//fmt.Println(result)
+		fmt.Println("verificationData")
+		fmt.Println(verificationData)
+
+		if len(verificationData.Email) > 0 {
+			verificationData.Code = code
+			verificationData.Email = email
+			DBGorm.Save(&verificationData)
+		} else {
+			verificationData.Email = email
+			verificationData.Code = code
+			DBGorm.Create(&verificationData)
+		}
+
+		emailManager := u.Info{Code: code}
+		emailManager.SendMailRecoveryEs(verificationData.Email)
 
 		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
 			"success": true,
