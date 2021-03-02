@@ -99,15 +99,9 @@ func main() {
 		fmt.Println("verificationData")
 		fmt.Println(verificationData)
 
-		if len(verificationData.Email) > 0 {
-			verificationData.Code = code
-			verificationData.Email = email
-			DBGorm.Model(&verificationData).Update("code", code)
-		} else {
-			verificationData.Email = email
-			verificationData.Code = code
-			DBGorm.Create(&verificationData)
-		}
+		DBGorm.Unscoped().Delete(&verificationData)
+		DBGorm.Create(&verificationData)
+
 
 		emailManager := u.Info{Code: code}
 		emailManager.SendMailRecoveryEn(verificationData.Email)
@@ -147,15 +141,8 @@ func main() {
 		fmt.Println("verificationData")
 		fmt.Println(verificationData)
 
-		if len(verificationData.Email) > 0 {
-			verificationData.Code = code
-			verificationData.Email = email
-			DBGorm.Model(&verificationData).Update("code", code)
-		} else {
-			verificationData.Email = email
-			verificationData.Code = code
-			DBGorm.Create(&verificationData)
-		}
+		DBGorm.Unscoped().Delete(&verificationData)
+		DBGorm.Create(&verificationData)
 
 		emailManager := u.Info{Code: code}
 		emailManager.SendMailRecoveryEs(verificationData.Email)
