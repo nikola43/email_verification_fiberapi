@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/joho/godotenv"
+	u "github.com/nikola43/rfpjforex_email_verification_api/utils"
 	"github.com/sethvargo/go-password/password"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"log"
 	"os"
 	"regexp"
 	"strings"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"github.com/joho/godotenv"
-	u "github.com/nikola43/rfpjforex_email_verification_api/utils"
 	"time"
 )
 
@@ -72,7 +72,7 @@ func main() {
 	app.Get("/auth/en/:email", func(c *fiber.Ctx) error {
 		email := c.Params("email")
 		verificationData := &VerificationData{}
-		ip := c.IP()
+		ip := c.Get("X-FORWARDED-FOR")
 
 		// comprobamos la longitud del email
 		if len(email) == 0 {
