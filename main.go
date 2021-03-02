@@ -9,6 +9,7 @@ import (
 	"github.com/sethvargo/go-password/password"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"log"
 	"os"
 	"regexp"
@@ -173,7 +174,7 @@ func InitializeDbCorrection(user, password, database_name string) {
 		password,
 		database_name,
 	)
-	DBGorm, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+	DBGorm, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 	if err != nil {
 		log.Fatal(err.Error())
 	}
