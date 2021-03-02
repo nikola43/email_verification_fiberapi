@@ -119,7 +119,6 @@ func main() {
 	app.Get("/auth/es/:email", func(c *fiber.Ctx) error {
 		email := c.Params("email")
 		verificationData := &VerificationData{}
-		ip2 := c.Get("X-Forwarded-For")
 		ip := c.Get("X-Real-Ip")
 
 
