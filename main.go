@@ -72,7 +72,6 @@ func main() {
 	app.Get("/auth/en/:email", func(c *fiber.Ctx) error {
 		email := c.Params("email")
 		verificationData := &VerificationData{}
-		ip2 := c.Get("X-Forwarded-For")
 		ip := c.Get("X-Real-Ip")
 
 
@@ -106,7 +105,7 @@ func main() {
 
 		verificationData.Code = code
 		verificationData.Email = email
-		verificationData.Ip = ip + " - " + ip2
+		verificationData.Ip = ip
 		DBGorm.Create(&verificationData)
 
 		emailManager := u.Info{Code: code}
@@ -154,7 +153,7 @@ func main() {
 
 		verificationData.Code = code
 		verificationData.Email = email
-		verificationData.Ip = ip + " - " + ip2
+		verificationData.Ip = ip
 		DBGorm.Create(&verificationData)
 
 		emailManager := u.Info{Code: code, Ip: ip}
