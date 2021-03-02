@@ -100,6 +100,9 @@ func main() {
 		fmt.Println(verificationData)
 
 		DBGorm.Unscoped().Delete(&verificationData)
+
+		verificationData.Code = code
+		verificationData.Email = email
 		DBGorm.Create(&verificationData)
 
 
@@ -142,6 +145,9 @@ func main() {
 		fmt.Println(verificationData)
 
 		DBGorm.Unscoped().Delete(&verificationData)
+
+		verificationData.Code = code
+		verificationData.Email = email
 		DBGorm.Create(&verificationData)
 
 		emailManager := u.Info{Code: code}
