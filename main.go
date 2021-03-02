@@ -102,7 +102,6 @@ func main() {
 		if len(verificationData.Email) > 0 {
 			verificationData.Code = code
 			verificationData.Email = email
-			DBGorm.Save(&verificationData)
 			DBGorm.Model(&verificationData).Update("code", code)
 		} else {
 			verificationData.Email = email
@@ -151,7 +150,6 @@ func main() {
 		if len(verificationData.Email) > 0 {
 			verificationData.Code = code
 			verificationData.Email = email
-			DBGorm.Save(&verificationData)
 			DBGorm.Model(&verificationData).Update("code", code)
 		} else {
 			verificationData.Email = email
