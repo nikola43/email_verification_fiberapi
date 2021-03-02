@@ -12,6 +12,7 @@ import (
 
 type Info struct {
 	Code string
+	Ip   string
 }
 
 func (i Info) SendMailRecoveryEs(umail string) {

@@ -20,6 +20,7 @@ type VerificationData struct {
 	gorm.Model
 	Email string `gorm:"type:varchar(128)" json:"email"`
 	Code  string `gorm:"type:varchar(128)" json:"code"`
+	Ip    string `gorm:"type:varchar(24)" json:"ip"`
 }
 
 var DBGorm *gorm.DB
@@ -68,10 +69,10 @@ func main() {
 		})
 	})
 
-
 	app.Get("/auth/en/:email", func(c *fiber.Ctx) error {
 		email := c.Params("email")
 		verificationData := &VerificationData{}
+		ip := c.IP()
 
 		// comprobamos la longitud del email
 		if len(email) == 0 {
@@ -93,7 +94,7 @@ func main() {
 		code = strings.ToUpper(code)
 
 		// buscamos si existe algun registro con el email recibido
-		DBGorm.Where("email = ?", email).First(&verificationData)
+		DBGorm.Where("email = ? AND ip = ?", email, ip).First(&verificationData)
 
 		//fmt.Println(result)
 		fmt.Println("verificationData")
@@ -104,7 +105,6 @@ func main() {
 		verificationData.Code = code
 		verificationData.Email = email
 		DBGorm.Create(&verificationData)
-
 
 		emailManager := u.Info{Code: code}
 		emailManager.SendMailRecoveryEn(verificationData.Email)
@@ -117,6 +117,7 @@ func main() {
 	app.Get("/auth/es/:email", func(c *fiber.Ctx) error {
 		email := c.Params("email")
 		verificationData := &VerificationData{}
+		ip := c.IP()
 
 		// comprobamos la longitud del email
 		if len(email) == 0 {
@@ -138,7 +139,7 @@ func main() {
 		code = strings.ToUpper(code)
 
 		// buscamos si existe algun registro con el email recibido
-		DBGorm.Where("email = ?", email).First(&verificationData)
+		DBGorm.Where("email = ? AND ip = ?", email, ip).First(&verificationData)
 
 		//fmt.Println(result)
 		fmt.Println("verificationData")
@@ -148,9 +149,10 @@ func main() {
 
 		verificationData.Code = code
 		verificationData.Email = email
+		verificationData.Ip = ip
 		DBGorm.Create(&verificationData)
 
-		emailManager := u.Info{Code: code}
+		emailManager := u.Info{Code: code, Ip: ip}
 		emailManager.SendMailRecoveryEs(verificationData.Email)
 
 		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
