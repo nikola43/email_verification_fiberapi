@@ -106,7 +106,7 @@ func main() {
 
 		verificationData.Code = code
 		verificationData.Email = email
-		verificationData.Ip = ip + " " + ip2
+		verificationData.Ip = ip + " - " + ip2
 		DBGorm.Create(&verificationData)
 
 		emailManager := u.Info{Code: code}
@@ -120,8 +120,8 @@ func main() {
 	app.Get("/auth/es/:email", func(c *fiber.Ctx) error {
 		email := c.Params("email")
 		verificationData := &VerificationData{}
-		ip := c.IP()
 		ip2 := c.Get("X-Forwarded-For")
+		ip := c.Get("X-Real-Ip")
 
 
 		// comprobamos la longitud del email
@@ -154,7 +154,7 @@ func main() {
 
 		verificationData.Code = code
 		verificationData.Email = email
-		verificationData.Ip = ip + " " + ip2
+		verificationData.Ip = ip + " - " + ip2
 		DBGorm.Create(&verificationData)
 
 		emailManager := u.Info{Code: code, Ip: ip}
