@@ -46,6 +46,8 @@ func main() {
 		code := c.Params("code")
 		verificationData := &VerificationData{}
 		ip := c.Get("X-Real-Ip")
+		verificationData.Ip = ip
+		verificationData.Code = code
 
 		// comprobamos la longitud del email
 		if len(code) == 0 {
@@ -96,7 +98,7 @@ func main() {
 		code = strings.ToUpper(code)
 
 		// buscamos si existe algun registro con el email recibido
-		DBGorm.Where("email = ? AND ip = ?", email, ip).First(&verificationData)
+		DBGorm.Where("email = ?", email).First(&verificationData)
 
 		//fmt.Println(result)
 		fmt.Println("verificationData")
@@ -142,7 +144,7 @@ func main() {
 		code = strings.ToUpper(code)
 
 		// buscamos si existe algun registro con el email recibido
-		DBGorm.Where("email = ? AND ip = ?", email, ip).First(&verificationData)
+		DBGorm.Where("email = ?", email).First(&verificationData)
 
 		//fmt.Println(result)
 		fmt.Println("verificationData")
