@@ -103,6 +103,7 @@ func main() {
 			verificationData.Code = code
 			verificationData.Email = email
 			DBGorm.Save(&verificationData)
+			DBGorm.Model(&verificationData).Update("code", code)
 		} else {
 			verificationData.Email = email
 			verificationData.Code = code
