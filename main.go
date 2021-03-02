@@ -72,7 +72,9 @@ func main() {
 	app.Get("/auth/en/:email", func(c *fiber.Ctx) error {
 		email := c.Params("email")
 		verificationData := &VerificationData{}
-		ip := c.Get("X-FORWARDED-FOR")
+		//ip := c.Get("X-Forwarded-For")
+		ip := c.Get("X-Real-Ip")
+
 
 		// comprobamos la longitud del email
 		if len(email) == 0 {
