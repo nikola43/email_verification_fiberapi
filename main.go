@@ -50,7 +50,7 @@ func main() {
 		}
 
 		// buscamos si existe algun registro con el email recibido
-		DBGorm.Where("code = ?", code).First(&verificationData)
+		DBGorm.Where("code = ?", code).First(&verificationData).Limit(1)
 
 		if len(verificationData.Code) > 0 {
 			today := time.Now()
