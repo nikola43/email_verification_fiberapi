@@ -42,12 +42,14 @@ func main() {
 		})
 	})
 
-	app.Get("/verify/:code", func(c *fiber.Ctx) error {
+	app.Get("/verify/:code/:email", func(c *fiber.Ctx) error {
 		code := c.Params("code")
+		email := c.Params("email")
 		verificationData := &VerificationData{}
 		ip := c.Get("X-Real-Ip")
 		verificationData.Ip = ip
 		verificationData.Code = code
+		verificationData.Email = email
 
 		// comprobamos la longitud del email
 		if len(code) == 0 {
@@ -55,7 +57,7 @@ func main() {
 		}
 
 		// buscamos si existe algun registro con el email recibido
-		DBGorm.Where("code = ? AND ip = ? ", code, ip).First(&verificationData).Limit(1)
+		DBGorm.Where("code = ? AND ip = ? AND email = ?", code, ip, email).First(&verificationData).Limit(1)
 
 		if len(verificationData.Code) > 0 {
 			today := time.Now()
