@@ -100,7 +100,6 @@ func main() {
 		// buscamos si existe algun registro con el email recibido
 		DBGorm.Where("email = ?", email).First(&verificationData)
 
-		//fmt.Println(result)
 		fmt.Println("verificationData")
 		fmt.Println(verificationData)
 
