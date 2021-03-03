@@ -111,7 +111,7 @@ func main() {
 		verificationData.Ip = ip
 		DBGorm.Create(&verificationData)
 
-		emailManager := u.Info{Code: code}
+		emailManager := u.Info{Code: code, Ip: ip}
 		emailManager.SendMailRecoveryEn(verificationData.Email)
 
 		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
