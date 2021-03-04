@@ -78,7 +78,7 @@ func main() {
 		verificationData := &VerificationData{Email: email}
 		ip := c.Get("X-Real-Ip")
 
-		DBGorm.Unscoped().Delete(&verificationData)
+		DBGorm.Where("email = ?", email).Unscoped().Delete(&verificationData)
 
 		// comprobamos la longitud del email
 		if len(email) == 0 {
@@ -105,7 +105,6 @@ func main() {
 		fmt.Println("verificationData")
 		fmt.Println(verificationData)
 
-		DBGorm.Unscoped().Delete(&verificationData)
 
 		verificationData.Code = code
 		verificationData.Email = email
@@ -125,7 +124,7 @@ func main() {
 		verificationData := &VerificationData{Email: email}
 		ip := c.Get("X-Real-Ip")
 
-		DBGorm.Unscoped().Delete(&verificationData)
+		DBGorm.Where("email = ?", email).Unscoped().Delete(&verificationData)
 
 
 		// comprobamos la longitud del email
