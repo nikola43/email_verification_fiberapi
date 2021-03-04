@@ -68,7 +68,7 @@ func main() {
 			}
 		}
 
-		return c.Status(fiber.StatusNotFound).JSON(&fiber.Map{
+		return c.Status(fiber.StatusOK).JSON(&fiber.Map{
 			"success": false,
 		})
 	})
