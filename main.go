@@ -64,6 +64,7 @@ func main() {
 				// veirificación OK !!
 				return c.Status(fiber.StatusOK).JSON(&fiber.Map{
 					"success": true,
+					"ip": ip,
 				})
 			}
 		}
